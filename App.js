@@ -1,20 +1,55 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, FlatList } from "react-native";
+import { useState } from "react";
+import ProjectForm from "./components/ProjectForm";
+import ProjectItem from "./components/ProjectItem";
 
 export default function App() {
+  const [projects, setProjects] = useState([]);
+
+  function addProjectHandler(title, description) {
+    setProjects((currentProjects) => [
+      ...currentProjects,
+      { title: title, description: description },
+    ]);
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.appContainer}>
+      <View style={styles.formContainer}>
+        <ProjectForm onAddProject={addProjectHandler} />
+      </View>
+      <View style={styles.projectsContainer}>
+        <FlatList
+          data={projects}
+          renderItem={(itemData) => {
+            return (
+              <ProjectItem
+                title={itemData.item.title}
+                description={itemData.item.description}
+              />
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return item.title;
+          }}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  appContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 64,
+    backgroundColor: "grey",
+  },
+  formContainer: {
+    flex: 1,
+    backgroundColor: "green",
+  },
+  projectsContainer: {
+    flex: 5,
+    backgrounColor: "red",
   },
 });
